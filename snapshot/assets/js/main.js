@@ -4,7 +4,6 @@
 	Released for free under the Creative Commons Attribution 3.0 license (templated.co/license)
 */
 var main = function() {
-console.log('called');
 	skel.breakpoints({
 		xlarge: '(max-width: 1680px)',
 		large: '(max-width: 1280px)',
@@ -14,7 +13,6 @@ console.log('called');
 	});
 
 	var init = function() {
-console.log('init');
 		var	$window = $(window),
 			$body = $('body');
 
@@ -110,12 +108,11 @@ var loadData = function(userid){
 		dataType: 'json',
 		success: function(json) {
 				$user = json.user;
-				console.log($user);
 				$("#fullname").append($user.fullname);
 				if(!$gallery)
 				{
 					$("#userphoto").attr('src', $user.userpic_url);
-					$("#banner").css('background-image', $user.cover_url);
+					$("#banner").css('background-image', 'url('+$user.cover_url+')');
 				}
 				//$("#affection").append($user.affection);
 				//$("#picture_count").append($user.photos_count);
@@ -136,19 +133,10 @@ var loadPhotos = function(userid){
 			}
 			for (var i = 0; i < $count;) {
 				$this = json.photos[i];
-				console.log($this.images[1].url);
-				console.log($this.images[0].url);
-				console.log($this.name);
 				$(".content").append('<div class="media"><a href="'+$this.images[1].url+'"><img src="'+$this.images[0].url+'" alt="" title="'+$this.name+'" /></a></div>');
 				i=i+1;
    }
-			// $(json.photos).each(function(index) {
-			// 	console.log(this.images[1].url);
-			// 	console.log(this.images[0].url);
-			// 	console.log(this.name);
-			// 	$(".content").append('<div class="media"><a href="'+this.images[1].url+'"><img src="'+this.images[0].url+'" alt="" title="'+this.name+'" /></a></div>');
-			// 
-			// });
+			
 			main();
 		}
 	});
