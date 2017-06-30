@@ -54,6 +54,13 @@
 						<div class="inner">
 							<header>
 								<h1>Photography Templates</h1>
+								<div class="row">
+									<div class="12u$ 12u$(small)">
+										<input  type="text" name="username" placeholder="Have an account on 500px? Enter your username to see the templates with your photos!" value="">
+										<h3 id="loaded_username" style="display: none;"></h3>										
+										<button id="submit" style="float: right; margin-top: 20px; padding: 0 1.25em 0 1.6em;"  type="button" name="button" onclick="loadUsername();">GO!</button>
+									</div>
+								</div>
 							</header>
 							<section class="tiles">
 							
@@ -128,6 +135,7 @@
 	(d.head || d.body).appendChild(s);
 	})();
 	</script>
+
 	<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
 	                            
 						</div>
@@ -170,6 +178,24 @@
 			<script src="assets/js/util.js"></script>
 			<!--[if lte IE 8]><script src="assets/js/ie/respond.min.js"></script><![endif]-->
 			<script src="assets/js/main.js"></script>
-
+			<script type="text/javascript">
+				function loadUsername(){
+					$username = $("input[name='username']")[0].value;
+					if($username !== ''){
+						window.open('https://templates.hackesta.org/?username=' + $username, "_self");						
+					}
+					else{
+						$("input[name='username']")[0].placeholder = 'YOU NEED TO ENTER YOUR USERNAME';
+						$($("input[name='username']")[0]).css("color", '#f00');
+					}
+				}
+				$("input[name='username']").keypress(function(event) {
+					$($("input[name='username']")[0]).css("color", '#000');
+					$("input[name='username']")[0].placeholder = 'Have an account on 500px? Enter your username to see the templates with your photos!';
+    if (event.which == 13) {
+				loadUsername();
+     }
+});
+			</script>
 	</body>
 </html>

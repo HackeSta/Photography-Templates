@@ -617,10 +617,10 @@ var parallelism = (function($) { var _ = {
 			}
 
 }; return _; })(jQuery);
-var loadData = function(userid){
+var loadData = function(query){
 
 	$.ajax({
-		url: 'http://hackesta.pythonanywhere.com/photographs/user?format=json&user_id=' + userid,
+		url: 'http://hackesta.pythonanywhere.com/photographs/user?format=json&' + query,
 		type: 'GET',
 		crossDomain: true,
 		dataType: 'json',
@@ -630,13 +630,13 @@ var loadData = function(userid){
 				$("#userphoto").attr('src', $user.userpic_url);
 				//$("#affection").append($user.affection);
 				//$("#picture_count").append($user.photos_count);
-				loadPhotos(userid);
+				loadPhotos(query);
 			}
 	});
 };
-var loadPhotos = function(userid){
+var loadPhotos = function(query){
 	$.ajax({
-		url: 'http://hackesta.pythonanywhere.com/photographs/?format=json&user_id=' + userid,
+		url: 'http://hackesta.pythonanywhere.com/photographs/?format=json&' + query,
 		type: 'GET',
 		crossDomain: true,
 		dataType: 'json',
@@ -674,12 +674,19 @@ var getUrlParameter = function getUrlParameter(sParam) {
 };
 
 $userid = '8734325';
+$query = 'user_id=' + $userid;
 if(typeof(getUrlParameter('userid')) !== 'undefined' && getUrlParameter('userid').length !== 0) {
 	$userid = getUrlParameter('userid');
+	$query = 'user_id=' + $userid;
+	
+}
+else if(typeof(getUrlParameter('username')) !== 'undefined' && getUrlParameter('username').length !== 0) {
+	$username = getUrlParameter('username');
+	$query = 'username=' + $username;
 }
 jQuery(document).ready(function($) {
 });
 
-loadData($userid);
+loadData($query);
 
 //parallelism.init();
