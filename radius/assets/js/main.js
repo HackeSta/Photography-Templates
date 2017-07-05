@@ -100,10 +100,11 @@ var loadPhotos = function(query){
 			$(json.photos).each(function(index) {
 				console.log(this);
 				$div = $(".columns");
-				$div.append('<div class="image fit"><a href="https://500px.com'+this.url+'"><img src="'+this.images[1].url+'" alt="" /></a></div>');
+				$div.append('<div class="image fit"><img class="preview-image" src="'+this.images[1].url+'" alt="" /></div>');
 					
 			});
 			// $("body").removeClass('loading');
+			var previewer = new Previewer();
 			main();
 
 		}
