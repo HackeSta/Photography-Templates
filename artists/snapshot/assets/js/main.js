@@ -15,9 +15,9 @@ var main = function() {
 	var init = function() {
 		$("a").each(function(index){
 			if($(this).attr('href') === 'gallery.html'){
-				if(typeof(getUrlParameter('username')) !== 'undefined' && getUrlParameter('username').length !== 0) {
-					$username = getUrlParameter('username');
-					$(this).attr('href', $(this).attr('href') + '?username=' + $username);
+				if(typeof(getUrlParameter('userid')) !== 'undefined' && getUrlParameter('userid').length !== 0) {
+					$userid = getUrlParameter('userid');
+					$(this).attr('href', $(this).attr('href') + '?userid=' + $userid);
 	
 				}	
 			}
@@ -109,43 +109,44 @@ var main = function() {
 	};
 		init();
 }; 
-var loadData = function(query){
+var loadData = function(userid, offset){
 	$.ajax({
-		url: 'http://hackesta.pythonanywhere.com/photographs/user?format=json&' + query,
+		url: 'http://hackesta.pythonanywhere.com/deviantart/user/?format=json&user_id=' + userid,
 		type: 'GET',
 		crossDomain: true,
 		dataType: 'json',
 		success: function(json) {
-				$user = json.user;
-				$("#fullname").append($user.fullname);
-				if(!$gallery)
-				{
-					$("#userphoto").attr('src', $user.userpic_url);
-					$("#banner").css('background-image', 'url('+$user.cover_url+')');
-				}
-				//$("#affection").append($user.affection);
-				//$("#picture_count").append($user.photos_count);
-				loadPhotos(query);
+			if(!$gallery)
+			{
+				$("#userphoto").attr('src', json.profile_pic);
 			}
+			$("#fullname").append(json.real_name);
+			loadPictures(userid, offset);
+		}
 	});
 };
-var loadPhotos = function(query){
+var loadPictures = function(userid,offset){
 	$.ajax({
-		url: 'http://hackesta.pythonanywhere.com/photographs/?format=json&' + query,
+		url: 'http://hackesta.pythonanywhere.com/deviantart/deviations/?format=json&user_id=' + userid + '&offset=' + offset,
 		type: 'GET',
 		crossDomain: true,
 		dataType: 'json',
 		success: function(json) {
 			$count = 8;
 			if($gallery){
-				$count = json.photos.length;
+				$count = json.deviations.length;
 			}
 			for (var i = 0; i < $count;) {
-				$this = json.photos[i];
-				$(".content").append('<div class="media"><a href="'+$this.images[1].url+'"><img src="'+$this.images[0].url+'" alt="" title="'+$this.name+'" /></a></div>');
+				$this = json.deviations[i];
+				$(".content").append('<div class="media"><a href="'+$this.image_url+'"><img src="'+$this.thumb_url+'" alt="" title="'+$this.title+'" /></a></div>');				
 				i=i+1;
    }
-			
+				
+			if(json.has_more === true){
+				// $loadmore = $("#loadmore");
+				// $loadmore.attr('href', '?userid='+ userid+'&offset=' + json.next_offset)
+				// $loadmore.css('display', 'block');
+			}
 			main();
 		}
 	});
@@ -175,17 +176,17 @@ var getPageName = function getPageName() {
 };
 
 
-$userid = '8734325';
-$query = 'user_id=' + $userid;
+$userid = 'sumaidsingh';
+$offset = '0';
 if(typeof(getUrlParameter('userid')) !== 'undefined' && getUrlParameter('userid').length !== 0) {
 	$userid = getUrlParameter('userid');
-	$query = 'user_id=' + $userid;
-	
 }
-else if(typeof(getUrlParameter('username')) !== 'undefined' && getUrlParameter('username').length !== 0) {
-	$username = getUrlParameter('username');
-	$query = 'username=' + $username;
+if(typeof(getUrlParameter('offset')) !== 'undefined' && getUrlParameter('offset').length !== 0) {
+	$offset = getUrlParameter('offset');
 }
+jQuery(document).ready(function($) {
+	$("body").addClass('loading');
+});
 $gallery = getPageName() === 'gallery';
 
-loadData($query);
+loadData($userid, $offset);

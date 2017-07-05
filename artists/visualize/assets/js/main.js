@@ -46,35 +46,39 @@ var main = function() {
 
 
 };
-var loadData = function(query){
+
+var loadData = function(userid, offset){
 	$.ajax({
-		url: 'http://hackesta.pythonanywhere.com/photographs/user?format=json&' + query,
+		url: 'http://hackesta.pythonanywhere.com/deviantart/user/?format=json&user_id=' + userid,
 		type: 'GET',
 		crossDomain: true,
 		dataType: 'json',
 		success: function(json) {
-				$user = json.user;
-				$("#fullname").append($user.fullname);
-				$("#userphoto").attr('src', $user.userpic_url);
-				//$("#affection").append($user.affection);
-				//$("#picture_count").append($user.photos_count);
-				loadPhotos(query);
-			}
+			$("#fullname").append(json.real_name);
+			$("#userphoto").attr('src', json.profile_pic);
+			loadPictures(userid, offset);
+		}
 	});
 };
-var loadPhotos = function(query){
+var loadPictures = function(userid,offset){
 	$.ajax({
-		url: 'http://hackesta.pythonanywhere.com/photographs/?format=json&' + query,
+		url: 'http://hackesta.pythonanywhere.com/deviantart/deviations/?format=json&user_id=' + userid + '&offset=' + offset,
 		type: 'GET',
 		crossDomain: true,
 		dataType: 'json',
 		success: function(json) {
-			$(json.photos).each(function(index) {
+			$(json.deviations).each(function(index) {
 				$div = $("#content1");
 				if(index % 3 === 1) $div = $("#content2");
 				if(index % 3 === 2) $div = $("#content3"); 
-				$div.append('<a href="'+this.images[1].url+'"><img src="'+this.images[0].url+'" alt="" title="'+this.name+'" /><h3>'+this.name+'</h3></a>');
+				$div.append('<a href="'+this.image_url+'"><img src="'+this.thumb_url+'" alt="" title="'+this.title+'" /><h3>'+this.title+'</h3></a>');
+				
 			});
+			if(json.has_more === true){
+				// $loadmore = $("#loadmore");
+				// $loadmore.attr('href', '?userid='+ userid+'&offset=' + json.next_offset)
+				// $loadmore.css('display', 'block');
+			}
 			main();
 		}
 	});
@@ -94,16 +98,16 @@ var getUrlParameter = function getUrlParameter(sParam) {
     }
 };
 
-$userid = '8734325';
-$query = 'user_id=' + $userid;
+$userid = 'sumaidsingh';
+$offset = '0';
 if(typeof(getUrlParameter('userid')) !== 'undefined' && getUrlParameter('userid').length !== 0) {
 	$userid = getUrlParameter('userid');
-	$query = 'user_id=' + $userid;
-	
 }
-else if(typeof(getUrlParameter('username')) !== 'undefined' && getUrlParameter('username').length !== 0) {
-	$username = getUrlParameter('username');
-	$query = 'username=' + $username;
+if(typeof(getUrlParameter('offset')) !== 'undefined' && getUrlParameter('offset').length !== 0) {
+	$offset = getUrlParameter('offset');
 }
+jQuery(document).ready(function($) {
+	$("body").addClass('loading');
+});
 
-loadData($query);
+loadData($userid, $offset);
