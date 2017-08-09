@@ -1,5 +1,5 @@
 /*!
- * previewer.js v0.1.1
+ * previewer.js v0.2.0
  * https://github.com/ajayns/previewer
  *
  * Copyright (c) 2017 Ajay NS
@@ -18,34 +18,43 @@ function Previewer() {
 		'		</div>' +
 		'	</div>';
 
+
+	// Add it to the body on init
+	document.body.innerHTML += this.template;
+
+	// Define function to close preview
 	this.closeWindow = function () {
-		$("#previewer").css("display", "none");
-		$("body").css("overflow", "scroll");
-	}
+		document.getElementById("previewer").style.display = "none";
+		document.getElementById("previewer-img").src = "";
+		document.body.style.overflow = "scroll";
+	};
+
 
 	var self = this;
-	// Add it to the body on init
-	$("body").append(this.template);
 
-	// Get img src and call previewer on click
-	$(".preview-image, .preview-images>li>img").click(function () {
-		var imgSrc = $(this).attr("src");
-		$("body").css("overflow", "hidden");
-		$("#previewer-img").attr("src", imgSrc);
-		$("#previewer").css("display", "block");
-	});
+	// Call previewer on image click
+	var images = document.querySelectorAll(".preview-image, .preview-images img");
+	for (i = 0; i < images.length; i++) {
+		images[i].addEventListener('click', function () {
+			
+			var imgSrc = this.getAttribute("src");
+			document.getElementById("previewer-img").src = imgSrc;			
+			document.getElementById("previewer").style.display = "block";	
+			
+		});
+	}
 
-	// Close previewer on click
-	$("#previewer-close").click(function () {
-		self.closeWindow();
-	});
-	$("#previewer-fade").click(function () {
-		self.closeWindow();
-	});
+
+	// Close previewer when clicked
+	document.getElementById("previewer-close").addEventListener("click", this.closeWindow);
+	document.getElementById("previewer-fade").addEventListener("click", this.closeWindow);
+
+
 	// Close window on keypress
-	$(document).keyup(function (e) {
-		if (e.keyCode == 27) { // escape key maps to keycode `27`
+	document.onkeydown = function (evt) {
+		evt = evt || window.event;
+		if (evt.keyCode == 27) {
 			self.closeWindow();
 		}
-	});
+	};
 }

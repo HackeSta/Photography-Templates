@@ -93,6 +93,7 @@ var loadData = function(query){
 var loadPhotos = function(query){
 	$.ajax({
 		url: 'http://hackesta.pythonanywhere.com/photographs/?format=json&' + query,
+		
 		type: 'GET',
 		crossDomain: true,
 		dataType: 'json',
@@ -100,7 +101,7 @@ var loadPhotos = function(query){
 			$(json.photos).each(function(index) {
 				console.log(this);
 				$div = $(".columns");
-				$div.append('<div class="image fit"><img class="preview-image" src="'+this.images[1].url+'" alt="" /></div>');
+				$div.append('<div class="image fit"><img src="'+this.images[1].url+'" alt="" /></div>');
 					
 			});
 			// $("body").removeClass('loading');
