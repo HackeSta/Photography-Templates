@@ -800,7 +800,7 @@ var main = (function($) {
 
 	loadData: function(userid, offset){
 		$.ajax({
-	    url: 'http://hackesta.pythonanywhere.com/deviantart/user/?format=json&user_id=' + userid,
+	    url: 'https://hackesta.pythonanywhere.com/deviantart/user/?format=json&user_id=' + userid,
 	    type: 'GET',
 	    crossDomain: true,
 	    dataType: 'json',
@@ -816,7 +816,7 @@ var main = (function($) {
 	},
 	loadPictures: function(userid,offset){
 	  $.ajax({
-	    url: 'http://hackesta.pythonanywhere.com/deviantart/deviations/?format=json&user_id=' + userid + '&offset=' + offset,
+	    url: 'https://hackesta.pythonanywhere.com/deviantart/deviations/?format=json&user_id=' + userid + '&offset=' + offset,
 	    type: 'GET',
 	    crossDomain: true,
 	    dataType: 'json',

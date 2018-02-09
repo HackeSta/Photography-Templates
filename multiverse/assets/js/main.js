@@ -298,7 +298,7 @@ var main = function() {
 var loadData = function(query){
 
 	$.ajax({
-		url: 'http://hackesta.pythonanywhere.com/photographs/user?format=json&' + query,
+		url: 'https://hackesta.pythonanywhere.com/photographs/user?format=json&' + query,
 		type: 'GET',
 		crossDomain: true,
 		dataType: 'json',
@@ -314,7 +314,7 @@ var loadData = function(query){
 };
 var loadPhotos = function(query){
 	$.ajax({
-		url: 'http://hackesta.pythonanywhere.com/photographs/?format=json&' + query,
+		url: 'https://hackesta.pythonanywhere.com/photographs/?format=json&' + query,
 		type: 'GET',
 		crossDomain: true,
 		dataType: 'json',
