@@ -23,7 +23,7 @@ var main = function() {
 
 		// Disable animations/transitions until the page has loaded.
 
-			
+
 
 		// Fix: Placeholder polyfill.
 			$('form').placeholder();
@@ -73,36 +73,35 @@ var main = function() {
 	});
 
 };
-var loadData = function(query){
+var loadData = function(){
 
 	$.ajax({
-		url: 'https://hackesta.pythonanywhere.com/photographs/user?format=json&' + query,
+		url: '/data/fpx_user.json',
 		type: 'GET',
 		crossDomain: true,
 		dataType: 'json',
 		success: function(json) {
 				$user = json.user;
-				$("#fullname").append($user.fullname);
-				$("#userphoto").attr('src', $user.userpic_url);
+				$("#fullname").append($user);
 				//$("#affection").append($user.affection);
 				//$("#picture_count").append($user.photos_count);
-				loadPhotos(query);
+				loadPhotos();
 			}
 	});
 };
-var loadPhotos = function(query){
+var loadPhotos = function(){
 	$.ajax({
-		url: 'https://hackesta.pythonanywhere.com/photographs/?format=json&' + query,
-		
+		url: '/data/fpx_photographs.json',
+
 		type: 'GET',
 		crossDomain: true,
 		dataType: 'json',
 		success: function(json) {
-			$(json.photos).each(function(index) {
+			$(json).each(function(index) {
 				console.log(this);
 				$div = $(".columns");
-				$div.append('<div class="image fit"><img src="'+this.images[1].url+'" alt="" /></div>');
-					
+				$div.append('<div class="image fit"><img src="'+this.url+'" alt="" /></div>');
+
 			});
 			// $("body").removeClass('loading');
 			var previewer = new Previewer();
@@ -126,19 +125,8 @@ var getUrlParameter = function getUrlParameter(sParam) {
     }
 };
 
-$userid = '8734325';
-$query = 'user_id=' + $userid;
-if(typeof(getUrlParameter('userid')) !== 'undefined' && getUrlParameter('userid').length !== 0) {
-	$userid = getUrlParameter('userid');
-	$query = 'user_id=' + $userid;
-	
-}
-else if(typeof(getUrlParameter('username')) !== 'undefined' && getUrlParameter('username').length !== 0) {
-	$username = getUrlParameter('username');
-	$query = 'username=' + $username;
-}
 jQuery(document).ready(function($) {
 	//$("body").addClass('loading');
 });
 
-loadData($query);
+loadData();

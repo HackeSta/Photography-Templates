@@ -18,8 +18,8 @@ var main = function() {
 				if(typeof(getUrlParameter('username')) !== 'undefined' && getUrlParameter('username').length !== 0) {
 					$username = getUrlParameter('username');
 					$(this).attr('href', $(this).attr('href') + '?username=' + $username);
-	
-				}	
+
+				}
 			}
 		});
 		var	$window = $(window),
@@ -27,9 +27,9 @@ var main = function() {
 
 		// Disable animations/transitions until the page has loaded.
 			// $body.addClass('is-loading');
-			// 
+			//
 			// $window.on('load', function() {
-			// 	
+			//
 			// 	window.setTimeout(function() {
 			// 		$body.removeClass('is-loading');
 			// 	}, 100);
@@ -108,44 +108,40 @@ var main = function() {
 
 	};
 		init();
-}; 
-var loadData = function(query){
+};
+var loadData = function(){
 	$.ajax({
-		url: 'https://hackesta.pythonanywhere.com/photographs/user?format=json&' + query,
+		url: '/data/fpx_user.json',
 		type: 'GET',
 		crossDomain: true,
 		dataType: 'json',
 		success: function(json) {
 				$user = json.user;
-				$("#fullname").append($user.fullname);
-				if(!$gallery)
-				{
-					$("#userphoto").attr('src', $user.userpic_url);
-					$("#banner").css('background-image', 'url('+$user.cover_url+')');
-				}
+				$("#fullname").append($user);
+
 				//$("#affection").append($user.affection);
 				//$("#picture_count").append($user.photos_count);
-				loadPhotos(query);
+				loadPhotos();
 			}
 	});
 };
-var loadPhotos = function(query){
+var loadPhotos = function(){
 	$.ajax({
-		url: 'https://hackesta.pythonanywhere.com/photographs/?format=json&' + query,
+		url: '/data/fpx_photographs.json',
 		type: 'GET',
 		crossDomain: true,
 		dataType: 'json',
 		success: function(json) {
 			$count = 8;
 			if($gallery){
-				$count = json.photos.length;
+				$count = json.length;
 			}
 			for (var i = 0; i < $count;) {
-				$this = json.photos[i];
-				$(".content").append('<div class="media"><a href="'+$this.images[1].url+'"><img src="'+$this.images[0].url+'" alt="" title="'+$this.name+'" /></a></div>');
+				$this = json[i];
+				$(".content").append('<div class="media"><a href="'+$this.url+'"><img src="'+$this.thumbnail+'" alt="" title="'+$this.title+'" /></a></div>');
 				i=i+1;
    }
-			
+
 			main();
 		}
 	});
@@ -169,23 +165,12 @@ var getUrlParameter = function getUrlParameter(sParam) {
 var getPageName = function getPageName() {
     var index = window.location.href.lastIndexOf("/") + 1,
         filenameWithExtension = window.location.href.substr(index),
-        filename = filenameWithExtension.split(".")[0];  
+        filename = filenameWithExtension.split(".")[0];
 
-    return filename;                                     
+    return filename;
 };
 
 
-$userid = '8734325';
-$query = 'user_id=' + $userid;
-if(typeof(getUrlParameter('userid')) !== 'undefined' && getUrlParameter('userid').length !== 0) {
-	$userid = getUrlParameter('userid');
-	$query = 'user_id=' + $userid;
-	
-}
-else if(typeof(getUrlParameter('username')) !== 'undefined' && getUrlParameter('username').length !== 0) {
-	$username = getUrlParameter('username');
-	$query = 'username=' + $username;
-}
 $gallery = getPageName() === 'gallery';
 
-loadData($query);
+loadData();

@@ -596,7 +596,7 @@ var parallelism = (function($) { var _ = {
 
 					// Mode.
 						// _.objects.window.on('load', function() {
-						// 
+						//
 						// 	skel
 						// 		.on('+desktop', function() {
 						// 			_.initDesktop();
@@ -609,7 +609,7 @@ var parallelism = (function($) { var _ = {
 						// 				location.reload(true);
 						// 			}, 50);
 						// 		});
-						// 
+						//
 						// });
 
 				});
@@ -620,35 +620,33 @@ var parallelism = (function($) { var _ = {
 var loadData = function(query){
 
 	$.ajax({
-		url: 'https://hackesta.pythonanywhere.com/photographs/user?format=json&' + query,
+		url: '/data/fpx_user.json',
 		type: 'GET',
 		crossDomain: true,
 		dataType: 'json',
 		success: function(json) {
 				$user = json.user;
-				$("#fullname").append($user.fullname);
-				$("#userphoto").attr('src', $user.userpic_url);
+				$("#fullname").append($user);
 				//$("#affection").append($user.affection);
 				//$("#picture_count").append($user.photos_count);
-				loadPhotos(query);
+				loadPhotos();
 			}
 	});
 };
-var loadPhotos = function(query){
+var loadPhotos = function(){
 	$.ajax({
-		url: 'https://hackesta.pythonanywhere.com/photographs/?format=json&' + query,
+		url: '/data/fpx_photographs.json',
 		type: 'GET',
 		crossDomain: true,
 		dataType: 'json',
 		success: function(json) {
-			$(json.photos).each(function(index) {
-				console.log(this)
+			$(json).each(function(index) {
 				$div = $("#reel");
-				$div.append('<article class="item thumb" data-width="'+parseInt(this.width)/10+'"><h2>'+this.name+'</h2><a href="'+this.images[1].url+'" class="image"><img src="'+this.images[0].url+'" alt=""></a></article>');
-					
+				$div.append('<article class="item thumb" data-width=200"><h2>'+this.title+'</h2><a href="'+this.url+'" class="image"><img src="'+this.thumbnail+'" alt=""></a></article>');
+
 			});
 			//$("body").removeClass('loading');
-			parallelism.init();			
+			parallelism.init();
 			if($(window).width() >= 737){
 				parallelism.initDesktop();
 			}
@@ -673,20 +671,6 @@ var getUrlParameter = function getUrlParameter(sParam) {
     }
 };
 
-$userid = '8734325';
-$query = 'user_id=' + $userid;
-if(typeof(getUrlParameter('userid')) !== 'undefined' && getUrlParameter('userid').length !== 0) {
-	$userid = getUrlParameter('userid');
-	$query = 'user_id=' + $userid;
-	
-}
-else if(typeof(getUrlParameter('username')) !== 'undefined' && getUrlParameter('username').length !== 0) {
-	$username = getUrlParameter('username');
-	$query = 'username=' + $username;
-}
-jQuery(document).ready(function($) {
-});
-
-loadData($query);
+loadData();
 
 //parallelism.init();

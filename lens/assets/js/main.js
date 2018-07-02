@@ -820,35 +820,43 @@ var main = (function($) {
 		$("#exif_aperture").append("Aperture: " +exif.aperture);
 
 	},
-	loadData: function(query){
+	loadData: function(){
+
 		$.ajax({
-			url: 'https://hackesta.pythonanywhere.com/photographs/user?format=json&' + query,
+			url: '/data/fpx_user.json',
 			type: 'GET',
 			crossDomain: true,
 	    dataType: 'json',
 	    success: function(json) {
 					$user = json.user;
-					console.log($user);
-					$("#fullname").append($user.fullname);
-					$("#userphoto").attr('src', $user.userpic_url);
-					$("#affection").append($user.affection);
-					$("#picture_count").append($user.photos_count);
-					main.loadPhotos(query);
+					$("#fullname").append($user);
+					// $("#affection").append($user.affection);
+					// $("#picture_count").append($user.photos_count);
+					main.loadPhotos();
 	      }
 		});
 	},
 
-	loadPhotos: function(query){
+	loadPhotos: function(){
 	  $.ajax({
-	    url: 'https://hackesta.pythonanywhere.com/photographs/?format=json&' + query,
+	    url: '/data/fpx_photographs.json',
 	    type: 'GET',
 	    crossDomain: true,
 	    dataType: 'json',
 	    success: function(json) {
-	      $(json.photos).each(function(index) {
-	        $("#thumbnails").append("<article><a class=\"thumbnail\" href=\"" +this.images[1].url +"\"500url=\"https://500px.com"+this.url +"\" exif_height=\""+this.height+"\" exif_width=\""+this.width+"\" exif_camera=\""+this.camera+"\" exif_lens=\""+this.lens+"\" exif_focal_length=\""+this.focal_length+"\" exif_shutter_speed=\""+this.shutter_speed+"\" exif_iso=\""+this.iso+"\" exif_aperture=\""+this.aperture+"\"><img src=\""+this.images[0].url+"\" alt=\""+this.name+"\" /></a><h2>"+this.name+"</h2></article>");
-
+	      $(json).each(function(index) {
+	        $("#thumbnails").append("<article><a class=\"thumbnail\" href=\"" +this.url +"\" 500url=\""+this.link + "\"> <img src=\""+this.thumbnail+"\" alt=\""+this.title+"\" ></img></a><h2>"+this.title+"</h2></article>");
 	      });
+				$("body").removeClass('loading')
+				$("body").removeClass('is-loading-0');
+
+				window.setTimeout(function() {
+				$("body").removeClass('is-loading-1');
+				}, 100);
+
+				window.setTimeout(function() {
+				$("body").removeClass('is-loading-2');
+				}, 100 + Math.max(_.settings.layoutDuration - 150, 0));
 				main.init();
 	    }
 	  });
@@ -869,17 +877,5 @@ var getUrlParameter = function getUrlParameter(sParam) {
         }
     }
 };
-$userid = '8734325';
-$query = 'user_id=' + $userid;
-if(typeof(getUrlParameter('userid')) !== 'undefined' && getUrlParameter('userid').length !== 0) {
-	$userid = getUrlParameter('userid');
-	$query = 'user_id=' + $userid;
-	
-}
-else if(typeof(getUrlParameter('username')) !== 'undefined' && getUrlParameter('username').length !== 0) {
-	$username = getUrlParameter('username');
-	$query = 'username=' + $username;
-}
 
-console.log($query);
-main.loadData($query);
+main.loadData();

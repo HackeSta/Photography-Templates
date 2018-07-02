@@ -298,31 +298,29 @@ var main = function() {
 var loadData = function(query){
 
 	$.ajax({
-		url: 'https://hackesta.pythonanywhere.com/photographs/user?format=json&' + query,
+		url: '/data/fpx_user.json',
 		type: 'GET',
 		crossDomain: true,
 		dataType: 'json',
 		success: function(json) {
 				$user = json.user;
-				$("#fullname").append($user.fullname);
-				$("#userphoto").attr('src', $user.userpic_url);
-				//$("#affection").append($user.affection);
-				//$("#picture_count").append($user.photos_count);
-				loadPhotos(query);
+				$("#fullname").append($user);
+				// $("#affection").append($user.affection);
+				// $("#picture_count").append($user.photos_count);
+				loadPhotos();
 			}
 	});
 };
-var loadPhotos = function(query){
+var loadPhotos = function(){
 	$.ajax({
-		url: 'https://hackesta.pythonanywhere.com/photographs/?format=json&' + query,
+		url: '/data/fpx_photographs.json',
 		type: 'GET',
 		crossDomain: true,
 		dataType: 'json',
 		success: function(json) {
-			$(json.photos).each(function(index) {
+			$(json).each(function(index) {
 				$div = $("#main");
-				$div.append('	<article class="thumb"><a href="'+this.images[1].url+'" class="image"><img src="'+this.images[0].url+'" alt="" /></a><h2>'+this.name+'</h2></article>');
-					
+				$div.append('	<article class="thumb"><a href="'+this.url+'" class="image"><img src="'+this.thumbnail+'" alt="" /></a><h2>'+this.title+'</h2></article>');
 			});
 			$("body").removeClass('loading');
 			main();
@@ -345,19 +343,8 @@ var getUrlParameter = function getUrlParameter(sParam) {
     }
 };
 
-$userid = '8734325';
-$query = 'user_id=' + $userid;
-if(typeof(getUrlParameter('userid')) !== 'undefined' && getUrlParameter('userid').length !== 0) {
-	$userid = getUrlParameter('userid');
-	$query = 'user_id=' + $userid;
-	
-}
-else if(typeof(getUrlParameter('username')) !== 'undefined' && getUrlParameter('username').length !== 0) {
-	$username = getUrlParameter('username');
-	$query = 'username=' + $username;
-}
 jQuery(document).ready(function($) {
 	$("body").addClass('loading');
 });
 
-loadData($query);
+loadData();
